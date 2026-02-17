@@ -1,0 +1,6 @@
+Get-Content rus.sql | sqlite3 dictionary.db
+sqlite3 dictionary.db "SELECT count(*) FROM mytable;"
+
+Get-Content convertcsv.sql | sqlite3 dictionary.db
+sqlite3 dictionary.db ".read convertcsv.sql"
+sqlite3 dictionary.db ".read 1.sql"

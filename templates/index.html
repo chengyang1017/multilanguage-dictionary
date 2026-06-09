@@ -298,17 +298,17 @@
 
 <div class="main-wrapper">
     <div class="language-header" id="lang-trigger">
-        <div class="lang-item">
+        <!-- <div class="lang-item">
             <img src="https://flagcdn.com/w80/cn.png" class="flag">
             <span>中文</span>
-        </div>
-        <div class="swap-icon">↔</div>
+        </div> -->
+        <!-- <div class="swap-icon">↔</div> -->
         <div class="lang-item">
-    <div id="target-flag-placeholder" class="flag" style="background-color: #1a1a1a; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; width: 35px; height: 25px; border-radius: 3px;">?</div>
+            <div id="target-flag-placeholder" class="flag" style="background-color: #1a1a1a; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; width: 35px; height: 25px; border-radius: 3px;">?</div>
     
-    <img id="target-flag" src="" class="flag" style="display: none;">
-    <span id="target-text">选择目标语言</span>
-</div>
+            <img id="target-flag" src="" class="flag" style="display: none;">
+            <span id="target-text">选择目标语言</span>
+        </div>
     </div>
 
     <form class="search-container" id="search-form">
@@ -354,7 +354,6 @@
         "sl": { name: "斯洛文尼亚语", flag: "si", title: "中斯洛文尼亚词典" },
         "mk": { name: "马其顿语", flag: "mk", title: "中马其顿词典" },
 
-
         //罗曼语族
         "fr": { name: "法语", flag: "fr", title: "中法词典" },
         "es": { name: "西班牙语", flag: "es", title: "中西词典" },
@@ -378,7 +377,6 @@
         "tg": { name: "塔吉克语", flag: "tj", title: "中塔吉克词典" },
 
 
-
         //凯尔特语族
         "ga": { name: "爱尔兰语", flag: "ie", title: "中爱尔兰词典" },
         "cy": { name: "威尔士语", flag: "gb", title: "中威尔士词典" },
@@ -390,7 +388,7 @@
         //2. 阿尔泰语系
         //突厥语族
         "tr": { name: "土耳其语", flag: "tr", title: "中土词典" },
-        "kk": { name: "哈萨克语", flag: "kz", title: "中哈词典" },
+        "kz": { name: "哈萨克语", flag: "kz", title: "中哈词典" },
         "ky": { name: "吉尔吉斯语", flag: "kg", title: "中吉词典" },
         "uz": { name: "乌兹别克语", flag: "uz", title: "中乌兹别克词典" },
         "tk": { name: "土库曼语", flag: "tm", title: "中土库曼词典" },
@@ -406,7 +404,7 @@
         //壮侗语族
         "th": { name: "泰语", flag: "th", title: "中泰词典" },
         "la": { name: "老挝语", flag: "la", title: "中老词典" },
-        "": { name: "壮语", flag: "cn", title: "中壮词典" },
+        "zh": { name: "壮语", flag: "cn", title: "中壮词典" },
 
         //苗瑶语族
         "hmn": { name: "苗语", flag: "cn", title: "中苗词典" },
@@ -423,6 +421,7 @@
         "id": { name: "印尼语", flag: "id", title: "中印尼词典" },
         "ms": { name: "马来语", flag: "my", title: "中马来词典" },
         "tl": { name: "菲律宾语", flag: "ph", title: "中菲词典" },
+        "jv": { name: "爪哇语", flag: "id", title: "中爪哇词典" },
 
         //达罗毗荼语系
         "ta": { name: "泰米尔语", flag: "lk", title: "中泰米尔词典" },
@@ -441,7 +440,6 @@
         "lv": { name: "拉脱维亚语", flag: "lv", title: "中拉词典" },
         "et": { name: "爱沙尼亚语", flag: "ee", title: "中爱词典" },
 
-        
 
         "ka": { name: "格鲁吉亚语", flag: "ge", title: "中格词典" },
         "hy": { name: "亚美尼亚语", flag: "am", title: "中亚美尼亚词典" },
@@ -460,13 +458,6 @@
         "ba": { name: "巴什基尔语", flag: "ru", title: "中巴什基尔词典" },
         "gag": { name: "加告兹语", flag: "md", title: "中加告兹词典" },
         "jp": { name: "日语", flag: "jp", title: "中日词典" }
-
-
-
-
-
-
-
     };
 
     let currentTargetLang = null; // 当前选中的目标语言代码
@@ -480,21 +471,21 @@
         langListContent.innerHTML = '';
 
         // --- 新增：在最上方添加“回到初始状态”按钮 ---
-    const resetDiv = document.createElement('div');
-    resetDiv.className = 'lang-option';// 继承 hover 动画
-    resetDiv.style.borderBottom = '2px solid #f1f5f9'; // 稍微加粗分割线
-    resetDiv.style.background = '#fafafa'; // 浅灰色背景区别开
-    resetDiv.innerHTML = `
-        <div class="flag" style="background:#1a1a1a; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">?</div>
-        <span style="font-weight:bold; color:#475569;">重置并重新选择</span>
-    `;
-    // 关键点：绑定点击事件
-    resetDiv.onclick = (e) => {
-        e.stopPropagation(); // 防止冒泡
-        resetToInitial();
-    };
-    langListContent.appendChild(resetDiv);
-    // --------------------------------------
+        const resetDiv = document.createElement('div');
+        resetDiv.className = 'lang-option';// 继承 hover 动画
+        //resetDiv.style.borderBottom = '2px solid #f1f5f9'; // 稍微加粗分割线
+        //resetDiv.style.background = '#F23716'; // 浅灰色背景区别开
+        resetDiv.innerHTML = `
+            <div class="flag" style="background:#1a1a1a; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">?</div>
+            <span style="font-weight:bold; color:#475569;">重置并重新选择</span>
+        `;
+        // 关键点：绑定点击事件
+        resetDiv.onclick = (e) => {
+            e.stopPropagation(); // 防止冒泡
+            resetToInitial();
+        };
+        langListContent.appendChild(resetDiv);
+        // --------------------------------------
 
     
         Object.keys(langConfigs).forEach(key => {
@@ -511,42 +502,47 @@
     function closeModal() { modal.style.display = 'none'; }
 
     function selectLanguage(langCode) {
-    const config = langConfigs[langCode];
-    if (!config) return;
+        const config = langConfigs[langCode];
+        if (!config) return;
 
-    // 更新当前选中的语言
-    currentTargetLang = langCode;
+        // 更新当前选中的语言
+        currentTargetLang = langCode;
 
-    // 获取 DOM 元素
-    const flagImg = document.getElementById('target-flag');
-    const placeholder = document.getElementById('target-flag-placeholder');
-    const targetText = document.getElementById('target-text');
-    const navTitle = document.getElementById('nav-title');
-    const searchInput = document.getElementById('search-input');
+        // 获取 DOM 元素
+        const flagImg = document.getElementById('target-flag');
+        const placeholder = document.getElementById('target-flag-placeholder');
+        const targetText = document.getElementById('target-text');
+        const navTitle = document.getElementById('nav-title');
+        const searchInput = document.getElementById('search-input');
+        const resultContainer = document.getElementById('result-container');
 
-    // 核心切换逻辑：
-    if (placeholder) {
-        placeholder.style.display = 'none'; // 隐藏黑色问号
-    }
-    if (flagImg) {
-        flagImg.src = `https://flagcdn.com/w80/${config.flag}.png`;
-        flagImg.style.display = 'block'; // 显示选中的国旗
+        // 核心切换逻辑：
+        if (placeholder) placeholder.style.display = 'none'; // 隐藏黑色问号
+        if (flagImg) {
+            flagImg.src = `https://flagcdn.com/w80/${config.flag}.png`;
+            flagImg.style.display = 'block'; // 显示选中的国旗
+        }
+
+        // 更新界面文字
+        if (targetText) {
+            targetText.innerText = config.name;
+            targetText.style.color = '#333';
+        }
+        if (navTitle) {
+            navTitle.innerText = config.title;
+        }
+        if (searchInput) {
+            searchInput.placeholder = `输入中文或${config.name}...`;
+        }
+
+        // ✅ 新增：切换语言时清空旧语言卡片
+        if (resultContainer) {
+            resultContainer.innerHTML = '';
+        }
+
+        closeModal();
     }
 
-    // 更新界面文字
-    if (targetText) {
-        targetText.innerText = config.name;
-        targetText.style.color = '#333';
-    }
-    if (navTitle) {
-        navTitle.innerText = config.title;
-    }
-    if (searchInput) {
-        searchInput.placeholder = `输入中文或${config.name}...`;
-    }
-
-    closeModal();
-}
 
     // 3. 搜索请求逻辑
     const searchForm = document.getElementById('search-form');
@@ -564,7 +560,7 @@
             langTrigger.style.borderColor = "#4CAF50";
         }, 200);
         
-        alert("请先选择目标语言（点击上方语言栏）");
+        //alert("请先选择目标语言（点击上方语言栏）");
         return;
     }
 
@@ -572,8 +568,13 @@
     if (!query) return;
 
         try {
+            // 构建请求 URL：
+            // query = 用户输入
+            // lang = 当前选择的语言
             // 发送请求给后端，带上当前选中的语言代码
             const response = await fetch(`/search?query=${encodeURIComponent(query)}&lang=${currentTargetLang}`);
+            
+            // 将返回结果解析为 JSON
             const data = await response.json();
 
             if (data.success) {
@@ -587,39 +588,52 @@
     };
 
     function renderResult(dataList) {
+        console.log("当前语言:", currentTargetLang);
+    
     const container = document.getElementById('result-container');
     container.innerHTML = ''; 
 
+    console.log("[DEBUG] 渲染数据:", dataList); // 🔹调试打印
+    
+
     dataList.forEach(match => {
+        console.log("当前 type:", match.type);
+        console.log("获取 schema:", LANG_SCHEMAS[currentTargetLang]?.[match.type]);
         const details = match.all_details || {};
         const type = match.type || "动词";
         const lang = currentTargetLang;
-        // 记录已经渲染过的键，避免重复显示
-        const displayedKeys = new Set(["type", "词根"]); 
+        const displayedKeys = new Set(["type", "中文"]); 
 
         const card = document.createElement('div');
         card.className = "result-card";
 
-        // 1. 渲染头部
         let cardContent = `
             <div class="card-header">
                 <span class="type-tag">${type}</span>
-                <span class="root-text">${details["词根"] || ''}</span>
+                <span class="root-text">${details["中文"] || ''}</span>
             </div>`;
 
-        // 2. 根据 LANG_SCHEMAS 配置渲染主体部分
-        const schema = (LANG_SCHEMAS[lang] && LANG_SCHEMAS[lang][type]);
+        // 如果 LANG_SCHEMAS 存在
+        // 并且 这个语言存在
+        // 并且 这个词性存在
+        // 👉 才拿 schema
+        // 否则 👉 schema = undefined
+
+        //const schema = LANG_SCHEMAS?.[lang]?.[type]; 更简洁
+        // window.LANG_SCHEMAS = LANG_SCHEMAS;
+        console.log("window.LANG_SCHEMAS:", window.LANG_SCHEMAS);
+        console.log("LANG_SCHEMAS:", LANG_SCHEMAS);
+        // 不需要 window
+        const schema = LANG_SCHEMAS?.[lang]?.[type];
+        //const schema = (window.LANG_SCHEMAS && LANG_SCHEMAS[lang] && LANG_SCHEMAS[lang][type]);
 
         if (schema) {
+            // 按 schema 渲染
             Object.keys(schema).forEach(sectionKey => {
                 const section = schema[sectionKey];
-                // 检查该板块下是否有数据
                 const hasData = section.keys.some(k => details.hasOwnProperty(k));
-
                 if (hasData) {
-                    cardContent += `<div class="section-divider">${section.title}</div>`;
-                    cardContent += `<div class="detail-grid">`;
-                    
+                    cardContent += `<div class="section-divider">${section.title}</div><div class="detail-grid">`;
                     section.keys.forEach(k => {
                         if (details[k]) {
                             cardContent += `
@@ -627,20 +641,30 @@
                                     <span class="detail-label">${k}</span>
                                     <span class="detail-value">${details[k]}</span>
                                 </div>`;
-                            displayedKeys.add(k); // 标记已处理
+                            displayedKeys.add(k);
                         }
                     });
                     cardContent += `</div>`;
                 }
             });
+        } else {
+            // 🔹没有 schema 就全部显示 all_details
+            cardContent += `<div class="section-divider">词条信息</div><div class="detail-grid">`;
+            Object.keys(details).forEach(k => {
+                cardContent += `
+                    <div class="detail-item">
+                        <span class="detail-label">${k}</span>
+                        <span class="detail-value">${details[k]}</span>
+                    </div>`;
+                displayedKeys.add(k);
+            });
+            cardContent += `</div>`;
         }
 
-        // 3. 渲染剩余的其他及补充信息
+        // 额外渲染 remainingKeys（防止遗漏）
         const remainingKeys = Object.keys(details).filter(k => !displayedKeys.has(k));
-        
         if (remainingKeys.length > 0) {
-            cardContent += `<div class="section-divider">其他信息</div>`;
-            cardContent += `<div class="detail-grid">`;
+            cardContent += `<div class="section-divider">其他信息</div><div class="detail-grid">`;
             remainingKeys.forEach(k => {
                 cardContent += `
                     <div class="detail-item">
@@ -655,6 +679,7 @@
         container.appendChild(card);
     });
 }
+
 
 function resetToInitial() {
     currentTargetLang = null; // 清空当前选中的语言代码

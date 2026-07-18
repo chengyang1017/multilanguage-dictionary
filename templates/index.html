@@ -4,64 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>万能多语言词典</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
+        :root{
+            /* ---- token system ---- */
+            --ink:        #1b2438;   /* deep ink-blue, page ground */
+            --ink-deep:   #11192a;
+            --paper:      #faf5ea;   /* warm parchment, card ground */
+            --paper-dim:  #f0e9d8;
+            --cinnabar:   #c1502e;   /* seal-ink red, primary accent */
+            --cinnabar-dk:#9c3f23;
+            --gold:       #c9a558;   /* secondary accent / highlight */
+            --sage:       #738a73;   /* tag / type marker */
+            --line:       #e4dac4;   /* hairline on paper */
+            --text-dim:   #8a7f68;
+            --text-body:  #2c2718;
+
+            --serif: 'Noto Serif SC', 'Songti SC', serif;
+            --sans:  'Noto Sans SC', 'Noto Sans', -apple-system, sans-serif;
+        }
+
+        *{ box-sizing:border-box; }
+
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-image: url('/static/images/bck2.png');
-            background-size: cover;
-            background-position: center;
+            font-family: var(--sans);
+            background:
+                radial-gradient(ellipse 900px 500px at 15% -10%, rgba(193,80,46,0.18), transparent 60%),
+                radial-gradient(ellipse 700px 600px at 100% 10%, rgba(201,165,88,0.10), transparent 55%),
+                var(--ink);
             background-attachment: fixed;
             display: flex;
             flex-direction: column;
+            color: var(--text-body);
         }
 
-        /* 导航栏 */
+        /* faint paper-grain texture sits above the gradients, behind content */
+        body::before{
+            content:"";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.5;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 3px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
+            z-index: 0;
+        }
+
+        /* ---------------- nav ---------------- */
         nav {
-            background-color: rgba(51, 51, 51, 0.95);
-            padding: 15px 30px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(180deg, var(--ink-deep), rgba(17,25,42,0.85));
+            border-bottom: 1px solid rgba(201,165,88,0.25);
+            padding: 18px 34px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box;
             width: 100%;
-            color: white;
         }
+        #nav-title{
+            margin:0;
+            font-family: var(--serif);
+            font-weight: 700;
+            font-size: 21px;
+            color: var(--paper);
+            letter-spacing: 0.5px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+        #nav-title::before{
+            content:"文";
+            font-family: var(--serif);
+            font-size: 15px;
+            color: var(--ink-deep);
+            background: var(--gold);
+            width: 28px; height: 28px;
+            border-radius: 7px;
+            display:flex; align-items:center; justify-content:center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            color: rgba(250,245,234,0.65);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover{ color: var(--gold); }
 
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { color: white; text-decoration: none; font-size: 14px; }
-
-        /* 主体布局 */
+        /* ---------------- main layout ---------------- */
         .main-wrapper {
+            position: relative;
+            z-index: 1;
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            padding: 20px;
+            padding: 64px 20px 40px;
         }
 
-        /* 语言选择器 */
+        .eyebrow{
+            font-family: var(--sans);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        /* ---------------- language selector ---------------- */
         .language-header {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px 25px;
-            border-radius: 50px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            gap: 18px;
+            margin-bottom: 36px;
+            background: var(--paper);
+            padding: 13px 28px 13px 18px;
+            border-radius: 999px;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.35), 0 0 0 1px rgba(201,165,88,0.3);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow 0.25s, border-color 0.2s;
+            border: 1px solid transparent;
         }
-        .language-header:hover { transform: translateY(-2px); background: #fff; }
+        .language-header:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 44px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,165,88,0.45);
+        }
+        .lang-item { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; color: var(--text-body); font-family: var(--serif); }
+        .flag { width: 34px; height: 24px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.06); }
+        .lang-glyph-ring{
+            position:absolute;
+            inset: -14px;
+            border-radius: 999px;
+            pointer-events:none;
+            border: 1px dashed rgba(201,165,88,0.35);
+            animation: spin 36s linear infinite;
+        }
+        @keyframes spin{ to{ transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce){ .lang-glyph-ring{ animation: none; } }
 
-        .lang-item { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; color: #333; }
-        .flag { width: 35px; height: 25px; object-fit: cover; border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .swap-icon { font-size: 20px; color: #888; }
-
-        /* 搜索框 */
+        /* ---------------- search ---------------- */
         .search-container {
             position: relative;
             width: 100%;
@@ -71,219 +163,263 @@
         }
         .search-container input {
             width: 100%;
-            padding: 18px 120px 18px 60px;
-            font-size: 18px;
-            border: none;
-            border-radius: 50px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 19px 130px 19px 56px;
+            font-size: 17px;
+            font-family: var(--sans);
+            border: 1px solid rgba(201,165,88,0.25);
+            border-radius: 999px;
+            background: var(--paper);
+            color: var(--text-body);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.3);
             outline: none;
+            transition: box-shadow 0.2s, border-color 0.2s;
         }
-        .search-icon { position: absolute; left: 20px; font-size: 22px; color: #999; }
+        .search-container input::placeholder{ color: var(--text-dim); }
+        .search-container input:focus{
+            box-shadow: 0 14px 30px rgba(0,0,0,0.3), 0 0 0 3px rgba(193,80,46,0.25);
+            border-color: var(--cinnabar);
+        }
+        .search-icon { position: absolute; left: 22px; font-size: 18px; color: var(--text-dim); }
         .search-btn {
             position: absolute;
-            right: 8px;
-            background-color: #4CAF50;
-            color: white;
+            right: 7px;
+            background: var(--cinnabar);
+            color: var(--paper);
             border: none;
-            padding: 12px 25px;
-            border-radius: 40px;
+            padding: 12px 26px;
+            border-radius: 999px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
+            font-family: var(--sans);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.15s;
         }
+        .search-btn:hover{ background: var(--cinnabar-dk); transform: translateY(-1px); }
+        .search-btn:active{ transform: translateY(0); }
 
-        /* 结果卡片动画 */
+        /* ---------------- results ---------------- */
         #result-container {
             max-width: 600px;
             width: 100%;
-            margin-top: 25px;
-            animation: slideUp 0.4s ease-out;
+            margin-top: 28px;
+        }
+
+        .result-card{
+            opacity: 0;
+            animation: slideUp 0.45s ease-out forwards;
         }
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 小节分割线：未完成体/完成体之间的横条 */
         .section-divider {
-            background: #f1f5f9;
-            color: #475569;
+            background: var(--paper-dim);
+            color: var(--text-dim);
             padding: 10px 25px;
-            font-size: 14px;
-            font-weight: 800;
-            border-left: 5px solid #4CAF50;
-            margin-top: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            border-left: 4px solid var(--cinnabar);
             text-transform: uppercase;
+            font-family: var(--sans);
         }
 
-        /* 补全项的微调：颜色稍微淡一点以示区别 */
         .remaining-item {
             background: #ffffff;
-            border: 1px dashed #e2e8f0;
+            border: 1px dashed var(--line);
+        }
+        .remaining-item .detail-label{ color: var(--text-dim); font-style: italic; }
+
+        .detail-grid:last-child { padding-bottom: 28px; }
+
+        .result-card {
+            position: relative;
+            background: var(--paper);
+            padding: 0;
+            border-radius: 18px;
+            margin-bottom: 26px;
+            box-shadow: 0 18px 38px rgba(0,0,0,0.3), 0 0 0 1px rgba(201,165,88,0.15);
+            border: none;
+            overflow: hidden;
         }
 
-        .remaining-item .detail-label {
-        color: #94a3b8;
-        font-style: italic;}
-
-        /* 保证最后一个网格底部有留白 */
-        .detail-grid:last-child {
-        padding-bottom: 30px;
+        .card-header {
+            position: relative;
+            background: linear-gradient(135deg, var(--ink-deep) 0%, #243150 100%);
+            padding: 22px 26px;
+            border-bottom: 3px solid var(--cinnabar);
+        }
+        .card-header .word-root {
+            font-size: 12px;
+            color: rgba(250,245,234,0.55);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            display: block;
+            font-family: var(--sans);
+        }
+        .card-header .word-meaning,
+        .card-header .root-text {
+            font-size: 27px;
+            font-weight: 700;
+            font-family: var(--serif);
+            color: var(--paper);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* 结果卡片深度美化 */
-.result-card {
-    position: relative;
-    background: #ffffff;
-    padding: 0; /* 内部改用 padding 控制 */
-    border-radius: 24px;
-    margin-bottom: 30px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-    border: 1px solid rgba(255,255,255,0.8);
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
+        .type-tag {
+            font-size: 11px;
+            background: var(--gold);
+            color: var(--ink-deep);
+            padding: 3px 11px;
+            border-radius: 5px;
+            vertical-align: middle;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-family: var(--sans);
+            display: inline-block;
+            margin-bottom: 8px;
+        }
 
-.result-card:hover {
-    transform: translateY(-5px);
-}
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 10px;
+            padding: 20px 25px;
+        }
 
-/* 卡片头部：亮色渐变 */
-.card-header {
-    background: linear-gradient(135deg, #f6f9ff 0%, #f0f4f8 100%);
-    padding: 20px 25px;
-    border-bottom: 1px solid #eef2f6;
-}
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11px 16px;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            transition: border-color 0.2s, transform 0.15s;
+        }
+        .detail-item:hover{ border-color: var(--cinnabar); transform: translateY(-1px); }
 
-.card-header .word-root {
-    font-size: 13px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-    display: block;
-}
+        .detail-label {
+            font-size: 12.5px;
+            color: var(--text-dim);
+            font-weight: 600;
+            font-family: var(--sans);
+        }
+        .detail-value {
+            font-size: 15px;
+            color: var(--ink-deep);
+            font-weight: 700;
+            font-family: var(--serif);
+        }
 
-.card-header .word-meaning {
-    font-size: 26px;
-    font-weight: 800;
-    color: #1e293b;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* 标签式词性显示 */
-.type-tag {
-    font-size: 12px;
-    background: #4CAF50;
-    color: white;
-    padding: 2px 10px;
-    border-radius: 6px;
-    vertical-align: middle;
-}
-
-/* 内容区域：去表格化，改用 Flex 布局 */
-.detail-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
-    padding: 25px;
-}
-
-.detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid #f1f5f9;
-}
-
-.detail-label {
-    font-size: 13px;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.detail-value {
-    font-size: 15px;
-    color: #0f172a;
-    font-weight: 600;
-}
-
-        /* 弹窗样式 */
+        /* ---------------- modal ---------------- */
         #language-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(17,25,42,0.7);
+            backdrop-filter: blur(6px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
         .modal-content {
-            background: white;
+            background: var(--paper);
             width: 85%;
             max-width: 400px;
             border-radius: 20px;
-            padding: 20px;
+            padding: 22px;
             max-height: 80vh;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+            border: 1px solid rgba(201,165,88,0.3);
+        }
+        .modal-content h3{
+            text-align:center;
+            margin: 2px 0 16px;
+            font-family: var(--serif);
+            color: var(--ink-deep);
+            font-size: 18px;
+            letter-spacing: 0.5px;
         }
         .lang-list { overflow-y: auto; flex: 1; }
+        .lang-list::-webkit-scrollbar{ width: 6px; }
+        .lang-list::-webkit-scrollbar-thumb{ background: var(--line); border-radius: 3px; }
         .lang-option {
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 13px 8px;
+            border-bottom: 1px solid var(--line);
             cursor: pointer;
+            font-family: var(--sans);
+            font-size: 14.5px;
+            color: var(--text-body);
+            border-radius: 8px;
+            transition: background 0.15s, padding-left 0.15s;
         }
-        .lang-option:hover { background: #f9f9f9; }
+        .lang-option:hover { background: var(--paper-dim); padding-left: 14px; }
 
-        /* 统一问号占位符的样式，使其与国旗外观一致 */
-#target-flag-placeholder {
-    background: #1e293b !important;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .modal-content > button {
+            margin-top: 14px;
+            padding: 13px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            cursor: pointer;
+            background: #fff;
+            color: var(--text-dim);
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .modal-content > button:hover{ background: var(--paper-dim); color: var(--ink-deep); }
 
-        /* 垃圾桶容器样式 */
-.clear-btn {
-    position: absolute;
-    right: -50px;
-    cursor: pointer;
-    padding: 8px;
-    color: #00d2ff; /* 默认亮蓝色 */
-    filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.4));
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        #target-flag-placeholder {
+            background: var(--ink-deep) !important;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold) !important;
+            font-family: var(--serif);
+        }
 
-/* 鼠标悬停效果 */
-.clear-btn:hover {
-    color: #0095ff; /* 悬停深蓝色 */
-    transform: scale(1.2);
-}
+        /* ---------------- clear button ---------------- */
+        .clear-btn {
+            position: absolute;
+            right: -52px;
+            cursor: pointer;
+            padding: 9px;
+            color: var(--gold);
+            filter: drop-shadow(0 0 8px rgba(201,165,88,0.35));
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .clear-btn:hover {
+            color: var(--cinnabar);
+            transform: scale(1.18) rotate(-6deg);
+        }
+        .clear-btn svg {
+            fill: rgba(255,255,255,0.08);
+            transition: fill 0.3s ease;
+        }
+        .clear-btn:hover svg { fill: rgba(193,80,46,0.18); }
 
-/* 内部 SVG 的填充样式 */
-.clear-btn svg {
-    /* 如果你想让颜色填满图标内部，将 fill 设置为 currentColor */
-    fill: rgba(0, 0, 0, 0.2); 
-    transition: fill 0.3s ease;
-}
-
-.clear-btn:hover svg {
-    fill: rgba(0, 149, 255, 0.4); /* 悬停时填充加深 */
-}
+        @media (max-width: 640px){
+            .clear-btn{ right: 8px; top: -46px; }
+            nav{ padding: 14px 20px; }
+            .main-wrapper{ padding-top: 48px; }
+        }
     </style>
 </head>
 <body>
@@ -297,43 +433,40 @@
 </nav>
 
 <div class="main-wrapper">
+    <div class="eyebrow">百种语言 · 一处查询</div>
+
     <div class="language-header" id="lang-trigger">
-        <!-- <div class="lang-item">
-            <img src="https://flagcdn.com/w80/cn.png" class="flag">
-            <span>中文</span>
-        </div> -->
-        <!-- <div class="swap-icon">↔</div> -->
+        <div class="lang-glyph-ring" aria-hidden="true"></div>
         <div class="lang-item">
-            <div id="target-flag-placeholder" class="flag" style="background-color: #1a1a1a; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; width: 35px; height: 25px; border-radius: 3px;">?</div>
-    
+            <div id="target-flag-placeholder" class="flag" style="display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; width: 35px; height: 25px;">?</div>
             <img id="target-flag" src="" class="flag" style="display: none;">
             <span id="target-text">选择目标语言</span>
         </div>
     </div>
 
     <form class="search-container" id="search-form">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search-input" placeholder="请输入俄语单词..." autofocus>
-    <button type="submit" class="search-btn">搜索</button>
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="请先选择语言..." autofocus>
+        <button type="submit" class="search-btn">搜索</button>
 
-    <div class="clear-btn" onclick="clearAll()" title="清空所有结果">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" 
-         stroke="currentColor" stroke-width="2.8" 
-         stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="3 6 5 6 21 6"></polyline>
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-    </svg>
-</div>
-</form>
+        <div class="clear-btn" onclick="clearAll()" title="清空所有结果">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+        </div>
+    </form>
 
     <div id="result-container"></div>
 </div>
 
 <div id="language-modal">
     <div class="modal-content">
-        <h3 style="text-align:center; margin-bottom:15px;">切换目标语言</h3>
+        <h3>切换目标语言</h3>
         <div class="lang-list" id="lang-list-content"></div>
-        <button onclick="closeModal()" style="margin-top:15px; padding:12px; border:none; border-radius:10px; cursor:pointer;">取消</button>
+        <button onclick="closeModal()">取消</button>
     </div>
 </div>
 <script src="/static/js/lang-schemas.js"></script>
@@ -384,7 +517,7 @@
         //雅利安语族
         "mr": { name: "马拉地语", flag: "in", title: "中马拉地词典" },
 
-        
+
         //2. 阿尔泰语系
         //突厥语族
         "tr": { name: "土耳其语", flag: "tr", title: "中土词典" },
@@ -400,7 +533,7 @@
         //藏缅语族
         "bo": { name: "藏语", flag: "cn", title: "中藏词典" },
         "my": { name: "缅甸语", flag: "mm", title: "中缅词典" },
-        
+
         //壮侗语族
         "th": { name: "泰语", flag: "th", title: "中泰词典" },
         "la": { name: "老挝语", flag: "la", title: "中老词典" },
@@ -470,24 +603,21 @@
     langTrigger.onclick = () => {
         langListContent.innerHTML = '';
 
-        // --- 新增：在最上方添加“回到初始状态”按钮 ---
+        // --- “回到初始状态”按钮 ---
         const resetDiv = document.createElement('div');
-        resetDiv.className = 'lang-option';// 继承 hover 动画
-        //resetDiv.style.borderBottom = '2px solid #f1f5f9'; // 稍微加粗分割线
-        //resetDiv.style.background = '#F23716'; // 浅灰色背景区别开
+        resetDiv.className = 'lang-option';
         resetDiv.innerHTML = `
-            <div class="flag" style="background:#1a1a1a; display:flex; align-items:center; justify-content:center; color:white; font-size:12px;">?</div>
-            <span style="font-weight:bold; color:#475569;">重置并重新选择</span>
+            <div class="flag" style="background:var(--ink-deep); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:12px;">?</div>
+            <span style="font-weight:700; color:var(--text-dim);">重置并重新选择</span>
         `;
-        // 关键点：绑定点击事件
         resetDiv.onclick = (e) => {
-            e.stopPropagation(); // 防止冒泡
+            e.stopPropagation();
             resetToInitial();
         };
         langListContent.appendChild(resetDiv);
         // --------------------------------------
 
-    
+
         Object.keys(langConfigs).forEach(key => {
             const config = langConfigs[key];
             const div = document.createElement('div');
@@ -517,7 +647,7 @@
         const resultContainer = document.getElementById('result-container');
 
         // 核心切换逻辑：
-        if (placeholder) placeholder.style.display = 'none'; // 隐藏黑色问号
+        if (placeholder) placeholder.style.display = 'none'; // 隐藏问号
         if (flagImg) {
             flagImg.src = `https://flagcdn.com/w80/${config.flag}.png`;
             flagImg.style.display = 'block'; // 显示选中的国旗
@@ -526,7 +656,7 @@
         // 更新界面文字
         if (targetText) {
             targetText.innerText = config.name;
-            targetText.style.color = '#333';
+            targetText.style.color = '#2c2718';
         }
         if (navTitle) {
             navTitle.innerText = config.title;
@@ -535,7 +665,7 @@
             searchInput.placeholder = `输入中文或${config.name}...`;
         }
 
-        // ✅ 新增：切换语言时清空旧语言卡片
+        // 切换语言时清空旧语言卡片
         if (resultContainer) {
             resultContainer.innerHTML = '';
         }
@@ -551,21 +681,20 @@
     searchForm.onsubmit = async (e) => {
         e.preventDefault();
         // 核心逻辑：拦截未选择语言的状态
-    if (!currentTargetLang) {
-        // 让语言选择器晃动一下提醒用户
-        langTrigger.style.transform = "scale(1.1)";
-        langTrigger.style.borderColor = "#ff4d4f";
-        setTimeout(() => {
-            langTrigger.style.transform = "scale(1)";
-            langTrigger.style.borderColor = "#4CAF50";
-        }, 200);
-        
-        //alert("请先选择目标语言（点击上方语言栏）");
-        return;
-    }
+        if (!currentTargetLang) {
+            // 让语言选择器晃动一下提醒用户
+            langTrigger.style.transform = "scale(1.06)";
+            langTrigger.style.boxShadow = "0 16px 36px rgba(193,80,46,0.45), 0 0 0 2px rgba(193,80,46,0.6)";
+            setTimeout(() => {
+                langTrigger.style.transform = "scale(1)";
+                langTrigger.style.boxShadow = "";
+            }, 220);
 
-    const query = document.getElementById('search-input').value.trim();
-    if (!query) return;
+            return;
+        }
+
+        const query = document.getElementById('search-input').value.trim();
+        if (!query) return;
 
         try {
             // 构建请求 URL：
@@ -573,152 +702,134 @@
             // lang = 当前选择的语言
             // 发送请求给后端，带上当前选中的语言代码
             const response = await fetch(`/search?query=${encodeURIComponent(query)}&lang=${currentTargetLang}`);
-            
+
             // 将返回结果解析为 JSON
             const data = await response.json();
 
             if (data.success) {
                 renderResult(data.data);
             } else {
-                resultContainer.innerHTML = `<div style="color:white; background:rgba(0,0,0,0.5); padding:15px; border-radius:10px; text-align:center;">未找到内容</div>`;
+                resultContainer.innerHTML = `<div style="color:var(--paper); background:rgba(17,25,42,0.6); border:1px solid rgba(201,165,88,0.25); padding:18px; border-radius:14px; text-align:center; font-family:var(--sans);">未找到内容</div>`;
             }
         } catch (err) {
-            resultContainer.innerHTML = `<div style="color:#ffcccc; text-align:center;">服务器连接失败</div>`;
+            resultContainer.innerHTML = `<div style="color:#f1b8a8; text-align:center; font-family:var(--sans);">服务器连接失败</div>`;
         }
     };
 
     function renderResult(dataList) {
-        console.log("当前语言:", currentTargetLang);
-    
-    const container = document.getElementById('result-container');
-    container.innerHTML = ''; 
+        const container = document.getElementById('result-container');
+        container.innerHTML = '';
 
-    console.log("[DEBUG] 渲染数据:", dataList); // 🔹调试打印
-    
+        dataList.forEach((match, idx) => {
+            const details = match.all_details || {};
+            const type = match.type || "动词";
+            const lang = currentTargetLang;
+            const displayedKeys = new Set(["type", "中文"]);
 
-    dataList.forEach(match => {
-        console.log("当前 type:", match.type);
-        console.log("获取 schema:", LANG_SCHEMAS[currentTargetLang]?.[match.type]);
-        const details = match.all_details || {};
-        const type = match.type || "动词";
-        const lang = currentTargetLang;
-        const displayedKeys = new Set(["type", "中文"]); 
+            const card = document.createElement('div');
+            card.className = "result-card";
+            card.style.animationDelay = `${idx * 0.06}s`;
 
-        const card = document.createElement('div');
-        card.className = "result-card";
+            let cardContent = `
+                <div class="card-header">
+                    <span class="type-tag">${type}</span>
+                    <span class="root-text">${details["中文"] || ''}</span>
+                </div>`;
 
-        let cardContent = `
-            <div class="card-header">
-                <span class="type-tag">${type}</span>
-                <span class="root-text">${details["中文"] || ''}</span>
-            </div>`;
+            const schema = LANG_SCHEMAS?.[lang]?.[type];
 
-        // 如果 LANG_SCHEMAS 存在
-        // 并且 这个语言存在
-        // 并且 这个词性存在
-        // 👉 才拿 schema
-        // 否则 👉 schema = undefined
+            if (schema) {
+                // 按 schema 渲染
+                Object.keys(schema).forEach(sectionKey => {
+                    const section = schema[sectionKey];
+                    const hasData = section.keys.some(k => details.hasOwnProperty(k));
+                    if (hasData) {
+                        cardContent += `<div class="section-divider">${section.title}</div><div class="detail-grid">`;
+                        section.keys.forEach(k => {
+                            if (details[k]) {
+                                cardContent += `
+                                    <div class="detail-item">
+                                        <span class="detail-label">${k}</span>
+                                        <span class="detail-value">${details[k]}</span>
+                                    </div>`;
+                                displayedKeys.add(k);
+                            }
+                        });
+                        cardContent += `</div>`;
+                    }
+                });
+            } else {
+                // 没有 schema 就全部显示 all_details
+                cardContent += `<div class="section-divider">词条信息</div><div class="detail-grid">`;
+                Object.keys(details).forEach(k => {
+                    cardContent += `
+                        <div class="detail-item">
+                            <span class="detail-label">${k}</span>
+                            <span class="detail-value">${details[k]}</span>
+                        </div>`;
+                    displayedKeys.add(k);
+                });
+                cardContent += `</div>`;
+            }
 
-        //const schema = LANG_SCHEMAS?.[lang]?.[type]; 更简洁
-        // window.LANG_SCHEMAS = LANG_SCHEMAS;
-        console.log("window.LANG_SCHEMAS:", window.LANG_SCHEMAS);
-        console.log("LANG_SCHEMAS:", LANG_SCHEMAS);
-        // 不需要 window
-        const schema = LANG_SCHEMAS?.[lang]?.[type];
-        //const schema = (window.LANG_SCHEMAS && LANG_SCHEMAS[lang] && LANG_SCHEMAS[lang][type]);
+            // 额外渲染 remainingKeys（防止遗漏）
+            const remainingKeys = Object.keys(details).filter(k => !displayedKeys.has(k));
+            if (remainingKeys.length > 0) {
+                cardContent += `<div class="section-divider">其他信息</div><div class="detail-grid">`;
+                remainingKeys.forEach(k => {
+                    cardContent += `
+                        <div class="detail-item remaining-item">
+                            <span class="detail-label">${k}</span>
+                            <span class="detail-value">${details[k]}</span>
+                        </div>`;
+                });
+                cardContent += `</div>`;
+            }
 
-        if (schema) {
-            // 按 schema 渲染
-            Object.keys(schema).forEach(sectionKey => {
-                const section = schema[sectionKey];
-                const hasData = section.keys.some(k => details.hasOwnProperty(k));
-                if (hasData) {
-                    cardContent += `<div class="section-divider">${section.title}</div><div class="detail-grid">`;
-                    section.keys.forEach(k => {
-                        if (details[k]) {
-                            cardContent += `
-                                <div class="detail-item">
-                                    <span class="detail-label">${k}</span>
-                                    <span class="detail-value">${details[k]}</span>
-                                </div>`;
-                            displayedKeys.add(k);
-                        }
-                    });
-                    cardContent += `</div>`;
-                }
-            });
-        } else {
-            // 🔹没有 schema 就全部显示 all_details
-            cardContent += `<div class="section-divider">词条信息</div><div class="detail-grid">`;
-            Object.keys(details).forEach(k => {
-                cardContent += `
-                    <div class="detail-item">
-                        <span class="detail-label">${k}</span>
-                        <span class="detail-value">${details[k]}</span>
-                    </div>`;
-                displayedKeys.add(k);
-            });
-            cardContent += `</div>`;
+            card.innerHTML = cardContent;
+            container.appendChild(card);
+        });
+    }
+
+
+    function resetToInitial() {
+        currentTargetLang = null; // 清空当前选中的语言代码
+
+        const flagImg = document.getElementById('target-flag');
+        const placeholder = document.getElementById('target-flag-placeholder');
+        const targetText = document.getElementById('target-text');
+        const navTitle = document.getElementById('nav-title');
+        const searchInput = document.getElementById('search-input');
+        const resultContainer = document.getElementById('result-container');
+
+        // 1. 恢复问号占位符
+        if (placeholder) placeholder.style.display = 'flex';
+        if (flagImg) flagImg.style.display = 'none';
+
+        // 2. 恢复初始文字
+        if (targetText) {
+            targetText.innerText = '选择目标语言';
+            targetText.style.color = '#8a7f68';
+        }
+        if (navTitle) navTitle.innerText = '万能多语言词典';
+
+        // 3. 恢复搜索框和清空结果
+        if (searchInput) {
+            searchInput.placeholder = '请先选择语言...';
+            searchInput.value = '';
+        }
+        if (resultContainer) {
+            resultContainer.innerHTML = '';
         }
 
-        // 额外渲染 remainingKeys（防止遗漏）
-        const remainingKeys = Object.keys(details).filter(k => !displayedKeys.has(k));
-        if (remainingKeys.length > 0) {
-            cardContent += `<div class="section-divider">其他信息</div><div class="detail-grid">`;
-            remainingKeys.forEach(k => {
-                cardContent += `
-                    <div class="detail-item">
-                        <span class="detail-label">${k}</span>
-                        <span class="detail-value">${details[k]}</span>
-                    </div>`;
-            });
-            cardContent += `</div>`;
-        }
-
-        card.innerHTML = cardContent;
-        container.appendChild(card);
-    });
-}
-
-
-function resetToInitial() {
-    currentTargetLang = null; // 清空当前选中的语言代码
-
-    const flagImg = document.getElementById('target-flag');
-    const placeholder = document.getElementById('target-flag-placeholder');
-    const targetText = document.getElementById('target-text');
-    const navTitle = document.getElementById('nav-title');
-    const searchInput = document.getElementById('search-input');
-    const resultContainer = document.getElementById('result-container');
-
-    // 1. 恢复黑色问号占位符
-    if (placeholder) placeholder.style.display = 'flex';
-    if (flagImg) flagImg.style.display = 'none';
-
-    // 2. 恢复初始文字
-    if (targetText) {
-        targetText.innerText = '选择目标语言';
-        targetText.style.color = '#888';
-    }
-    if (navTitle) navTitle.innerText = '万能多语言词典';
-
-    // 3. 恢复搜索框和清空结果
-    if (searchInput) {
-        searchInput.placeholder = '请先选择语言...';
-        searchInput.value = '';
-    }
-    if (resultContainer) {
-        resultContainer.innerHTML = '';
+        closeModal();
     }
 
-    closeModal();
-}
-
-function clearAll() {
-    document.getElementById('result-container').innerHTML = '';
-    document.getElementById('search-input').value = ''; // 顺便把输入框也清空
-    document.getElementById('search-input').focus();
-}
+    function clearAll() {
+        document.getElementById('result-container').innerHTML = '';
+        document.getElementById('search-input').value = ''; // 顺便把输入框也清空
+        document.getElementById('search-input').focus();
+    }
 </script>
 </body>
 </html>

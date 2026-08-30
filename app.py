@@ -27,6 +27,10 @@ def clean_value(value):
 
 @app.route('/')
 def index():
+    return render_template('home.html')
+
+@app.route('/classic')
+def classic():
     return render_template('index.html')
 
 @app.route('/search')
